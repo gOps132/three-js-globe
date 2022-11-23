@@ -6,39 +6,49 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
  */
 import * as dat from 'dat.gui'
 
-import earth_map from "Assets/textures/8081_earthmap2k.jpeg"
+import earth_map from "Assets/textures/8081_earthmap10k.jpeg"
 const gui = new dat.GUI()
 
 /**
- * Base
+ * Canvas
  */
-// Canvas
 const canvas = document.querySelector('canvas.webgl')
 
-// Scene
+/**
+ * Scene
+ */
 const scene = new THREE.Scene()
 
 /**
- * Object
+ * Stars
  */
-const geometry = new THREE.IcosahedronGeometry(100, 2)
-const material = new THREE.MeshNormalMaterial()
-// Material Props.
-material.wireframe = true
-// Create Mesh & Add To Scene
-const mesh = new THREE.Mesh(geometry, material)
+const geometry = new THREE.OctahedronGeometry(300, 1)
+// const material = new THREE.MeshNormalMaterial()
+const material = new THREE.PointsMaterial({color: 0xFFFFFF})
+// material.wireframe = true
+const mesh = new THREE.Points(geometry, material)
 
+const geometry_2 = new THREE.OctahedronGeometry(500, 3)
+// const material_2 = new THREE.MeshNormalMaterial()
+// material_2.wireframe = true
+const material_2 = new THREE.PointsMaterial({color: 0xFFFFFF})
+const mesh_2 = new THREE.Points(geometry_2, material_2)
+
+/**
+ * Globe
+ */
 const sphere = new THREE.Mesh(
-    new THREE.SphereGeometry(20, 50, 50), 
-    new THREE.MeshBasicMaterial({
+	new THREE.SphereGeometry(20, 50, 50), 
+	new THREE.MeshBasicMaterial({
 		map: new THREE.TextureLoader().load(earth_map)
-    })
+	})
 );
 
 /**
  * Add scenes
  */
 scene.add(mesh)
+scene.add(mesh_2)
 scene.add(sphere)
 
 /**
@@ -66,7 +76,6 @@ window.addEventListener('resize', () => {
 /**
  * Camera
  */
-// Base camera
 const camera = new THREE.PerspectiveCamera(
 	75,
 	sizes.width / sizes.height,
@@ -108,9 +117,10 @@ const clock = new THREE.Clock()
 const tick = () => {
 	const elapsedTime = clock.getElapsedTime()
 
-	//mesh.rotation.y += 0.01 * Math.sin(1)
-	//mesh.rotation.y += 0.01 * Math.sin(1)
-	mesh.rotation.z += 0.01 * Math.sin(1)
+	mesh.rotation.y += 0.001 * Math.sin(1)
+	mesh_2.rotation.y += 0.001 * Math.sin(1)
+	mesh.rotation.z += 0.001 * Math.sin(1)
+	mesh_2.rotation.z += 0.001 * Math.sin(1)
 
 	// Update controls
 	controls.update()
