@@ -29,19 +29,19 @@ const scene = new THREE.Scene();
 /**
  * Stars
  */
-// const material = new THREE.MeshNormalMaterial();
-// material.wireframe = true;
-const octahedron_star_01 = new THREE.Points(
-	new THREE.OctahedronGeometry(300, 1), 
-	new THREE.PointsMaterial({color: 0xFFFFFF})
-);
+// // const material = new THREE.MeshNormalMaterial();
+// // material.wireframe = true;
+// const octahedron_star_01 = new THREE.Points(
+// 	new THREE.OctahedronGeometry(300, 1), 
+// 	new THREE.PointsMaterial({color: 0xFFFFFF})
+// );
 
-// const material_2 = new THREE.MeshNormalMaterial();
-// material_2.wireframe = true;
-const octahedron_star_02 = new THREE.Points(
-	new THREE.OctahedronGeometry(600, 3),
-	new THREE.PointsMaterial({color: 0xFFFFFF})
-);
+// // const material_2 = new THREE.MeshNormalMaterial();
+// // material_2.wireframe = true;
+// const octahedron_star_02 = new THREE.Points(
+// 	new THREE.OctahedronGeometry(600, 3),
+// 	new THREE.PointsMaterial({color: 0xFFFFFF})
+// );
 
 const star_geometry = new THREE.BufferGeometry();
 const star_material = new THREE.PointsMaterial({
@@ -89,7 +89,10 @@ const atmosphere = new THREE.Mesh(
 		vertexShader: atmosphere_vertex_shader,
 		fragmentShader: atmosphere_fragment_shader,
 		blending: THREE.AdditiveBlending,
-		side: THREE.BackSide
+		side: THREE.BackSide,
+		uniforms: {
+			
+		}
 	})
 );
 
@@ -139,7 +142,6 @@ camera.position.x = 1;
 camera.position.y = 1;
 camera.position.z = 50;
 scene.add(camera);
-
 
 /**
  * GUI options
