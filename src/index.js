@@ -1,9 +1,7 @@
 import './style/main.css';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-/**
- * GUI Controls
- */
+
 import * as dat from 'dat.gui';
 
 import globe_vertex_shader from "Assets/shaders/vertex_globe.glsl";
@@ -13,6 +11,12 @@ import atmosphere_vertex_shader from "Assets/shaders/vertex_atmosphere.glsl";
 import atmosphere_fragment_shader from "Assets/shaders/fragment_atmosphere.glsl";
 
 import earth_map from "Assets/textures/8081_earthmap2k.jpeg";
+
+import { drawThreeGeo } from "App/threeGeoJSON.js";
+
+import samp_geojson from "Assets/json/samp.json";
+import border_geojson from "Assets/json/border.json";
+import countries_states from "Assets/json/countries_states.json";
 
 const gui = new dat.GUI();
 
@@ -25,6 +29,22 @@ const canvas = document.querySelector('canvas.webgl');
  * Scene
  */
 const scene = new THREE.Scene();
+
+// drawThreeGeo(samp_geojson, 20, 'sphere', scene, {
+//     color: 'green',
+// 	borderColor: 'green'
+// })
+
+// drawThreeGeo(border_geojson, 20, 'sphere', scene, {
+// 	color: 'yellow',
+// 	borderColor: 'yellow'
+// })
+
+drawThreeGeo(countries_states, 20, 'sphere', scene, {
+	color: 'green',
+	borderColor: 'yellow'
+})
+
 
 /**
  * Stars
@@ -83,6 +103,15 @@ const earth = new THREE.Mesh(
 	})
 );
 
+const empty_earth = new THREE.Mesh(
+	new THREE.SphereGeometry(20, 50, 50), 
+	new THREE.MeshBasicMaterial({
+		// shininess: 0.2,
+		side: THREE.BackSide,
+		color: 0x2d37f2
+	})
+);
+
 const atmosphere = new THREE.Mesh(
 	new THREE.SphereGeometry(20, 50, 50), 
 	new THREE.ShaderMaterial({
@@ -91,7 +120,6 @@ const atmosphere = new THREE.Mesh(
 		blending: THREE.AdditiveBlending,
 		side: THREE.BackSide,
 		uniforms: {
-			
 		}
 	})
 );
@@ -104,7 +132,8 @@ atmosphere.scale.set(1.1, 1.1, 1.1);
 // scene.add(octahedron_star_01);
 // scene.add(octahedron_star_02);
 scene.add(stars);
-scene.add(earth);
+scene.add(empty_earth);
+// scene.add(earth);
 scene.add(atmosphere);
 
 /**
@@ -155,8 +184,8 @@ earth_folder.add(earth.rotation, 'z', 0, Math.PI).name('Rotate Z Axis');
 var control_params = {
 	auto_rotate: true,
 	enable_damping: true,
-	enable_zoom: false,
-	enable_pan: false,
+	enable_zoom: true,
+	enable_pan: true,
 	damping_factor: 0.05,
 	max_distance: 1000,
 	min_distance: 30
@@ -193,6 +222,7 @@ camera_folder.add(control_params, 'enable_pan').name("Enable Pan")
 const renderer = new THREE.WebGLRenderer({
 	canvas: canvas,
 	antialias: true,
+	alpha: true
 });
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));

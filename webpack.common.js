@@ -8,6 +8,7 @@ module.exports = {
 		extensions: ['.js', '.jsx', 'html'],
 		alias: { 
 			Assets: path.resolve(__dirname, './src/assets/'),
+			App: path.resolve(__dirname, './src/app/'),
 			Src: path.resolve(__dirname, './src/'),
 			CSS: path.resolve(__dirname, './src/css/'),
 		},

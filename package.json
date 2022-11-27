@@ -3,6 +3,9 @@
 	"version": "1.0.0",
 	"description": "Globe",
 	"main": "index.js",
+	"engines": {
+		"node": "<=16.x"
+	},
 	"scripts": {
 		"build:prod": "webpack --config ./webpack.prod.js",
 		"build:dev": "webpack --config ./webpack.dev.js",
@@ -39,6 +42,14 @@
 		"webpack-merge": "^4.2.2"
 	},
 	"dependencies": {
-		"dat.gui": "^0.7.7"
+		"d3": "^7.6.1",
+		"d3-array": "^3.2.0",
+		"d3-collection": "^1.0.7",
+		"d3-dispatch": "^3.0.1",
+		"d3-request": "^1.0.6",
+		"dat.gui": "^0.7.7",
+		"get-json": "^1.0.1",
+		"topojson": "^3.0.2",
+		"topojson-client": "^3.1.0"
 	}
 }
