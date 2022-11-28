@@ -219,12 +219,14 @@ continents.add(misc_mesh_params, 'show').name("show fill")
 		if(value) {
 			for(var i = 0; i < mesh_array.length; i++) {
 				scene.add(mesh_array[i]);
+				empty_earth.add(mesh_array[i]);
 			}
 		} else {
 			for(var i = 0; i < mesh_array.length; i++) {
 				mesh_array[i].geometry.dispose();
 				mesh_array[i].material.dispose();
 				scene.remove(mesh_array[i]);
+				empty_earth.remove(mesh_array[i]);
 			}
 		}
 	})
@@ -234,12 +236,14 @@ continents.add(misc_border_params, 'show').name("show border")
 	if(value) {
 		for(var i = 0; i < border_array.length; i++) {
 			scene.add(border_array[i]);
+			empty_earth.add(border_array[i]);
 		}
 	} else {
 		for(var i = 0; i < border_array.length; i++) {
 			border_array[i].geometry.dispose();
 			border_array[i].material.dispose();
 			scene.remove(border_array[i]);
+			empty_earth.remove(border_array[i]);
 		}
 	}
 })
