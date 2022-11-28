@@ -4,20 +4,12 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 import * as dat from 'dat.gui';
 
-import globe_vertex_shader from "Assets/shaders/vertex_globe.glsl";
-import globe_fragment_shader from "Assets/shaders/fragment_globe.glsl";
-
 import atmosphere_vertex_shader from "Assets/shaders/vertex_atmosphere.glsl";
 import atmosphere_fragment_shader from "Assets/shaders/fragment_atmosphere.glsl";
 
-import earth_map from "Assets/textures/8081_earthmap2k.jpeg";
-
 import { drawThreeGeo } from "App/threeGeoJSON.js";
 
-import samp_geojson from "Assets/json/samp.json";
-import border_geojson from "Assets/json/border.json";
 import countries_states from "Assets/json/countries_states.json";
-import samp2 from "Assets/json/reconstructed_0.00Ma.json";
 
 const gui = new dat.GUI();
 
@@ -62,23 +54,6 @@ const stars = new THREE.Points(star_geometry, star_material);
  */
 const earth = new THREE.Mesh(
 	new THREE.SphereGeometry(20, 50, 50), 
-	// new THREE.MeshBasicMaterial({
-	// 	map: new THREE.TextureLoader().load(earth_map),
-	// 	shininess: 0.2
-	// })
-	new THREE.ShaderMaterial({
-		vertexShader: globe_vertex_shader,
-		fragmentShader: globe_fragment_shader,
-		uniforms: {
-			globe_texture: {
-				value: new THREE.TextureLoader().load(earth_map)
-			}
-		}
-	})
-);
-
-const empty_earth = new THREE.Mesh(
-	new THREE.SphereGeometry(20, 50, 50), 
 	new THREE.MeshBasicMaterial({
 		// shininess: 0.2,
 		side: THREE.BackSide,
@@ -108,11 +83,11 @@ drawThreeGeo(countries_states, 20, 'sphere', scene, mesh_array, border_array, {
 })
 
 for(var i = 0; i < mesh_array.length; i++) {
-	empty_earth.add(mesh_array[i]);
+	earth.add(mesh_array[i]);
 }
 
 for(var i = 0; i < border_array.length; i++) {
-	empty_earth.add(border_array[i]);
+	earth.add(border_array[i]);
 }
 
 
@@ -120,8 +95,7 @@ for(var i = 0; i < border_array.length; i++) {
  * Add scenes
  */
 scene.add(stars);
-scene.add(empty_earth);
-// scene.add(earth);
+scene.add(earth);
 scene.add(atmosphere);
 
 /**
@@ -169,12 +143,6 @@ earth_folder.add(earth.rotation, 'x', 0, Math.PI).name('Rotate X Axis');
 earth_folder.add(earth.rotation, 'y', 0, Math.PI).name('Rotate Y Axis');
 earth_folder.add(earth.rotation, 'z', 0, Math.PI).name('Rotate Z Axis');
 
-const empty_earth_folder = gui.addFolder('Empty Earth');
-empty_earth_folder.add(empty_earth.material, 'wireframe');
-empty_earth_folder.add(empty_earth.rotation, 'x', 0, Math.PI).name('Rotate X Axis');
-empty_earth_folder.add(empty_earth.rotation, 'y', 0, Math.PI).name('Rotate Y Axis');
-empty_earth_folder.add(empty_earth.rotation, 'z', 0, Math.PI).name('Rotate Z Axis');
-
 var control_params = {
 	auto_rotate: true,
 	enable_damping: true,
@@ -219,14 +187,14 @@ continents.add(misc_mesh_params, 'show').name("show fill")
 		if(value) {
 			for(var i = 0; i < mesh_array.length; i++) {
 				scene.add(mesh_array[i]);
-				empty_earth.add(mesh_array[i]);
+				earth.add(mesh_array[i]);
 			}
 		} else {
 			for(var i = 0; i < mesh_array.length; i++) {
 				mesh_array[i].geometry.dispose();
 				mesh_array[i].material.dispose();
 				scene.remove(mesh_array[i]);
-				empty_earth.remove(mesh_array[i]);
+				earth.remove(mesh_array[i]);
 			}
 		}
 	})
@@ -236,14 +204,14 @@ continents.add(misc_border_params, 'show').name("show border")
 	if(value) {
 		for(var i = 0; i < border_array.length; i++) {
 			scene.add(border_array[i]);
-			empty_earth.add(border_array[i]);
+			earth.add(border_array[i]);
 		}
 	} else {
 		for(var i = 0; i < border_array.length; i++) {
 			border_array[i].geometry.dispose();
 			border_array[i].material.dispose();
 			scene.remove(border_array[i]);
-			empty_earth.remove(border_array[i]);
+			earth.remove(border_array[i]);
 		}
 	}
 })
