@@ -10,6 +10,7 @@ import atmosphere_fragment_shader from "Assets/shaders/fragment_atmosphere.glsl"
 import { drawThreeGeo } from "App/threeGeoJSON.js";
 
 import countries_states from "Assets/json/countries_states.json";
+import one_ma from "Assets/json/example/0.00Ma_polygon.json";
 
 const gui = new dat.GUI();
 
@@ -77,7 +78,7 @@ atmosphere.scale.set(1.1, 1.1, 1.1);
 
 var mesh_array = [];
 var border_array = [];
-drawThreeGeo(countries_states, 20, 'sphere', scene, mesh_array, border_array, {
+drawThreeGeo(one_ma, 20, 'sphere', scene, mesh_array, border_array, {
 	color: 'green',
 	borderColor: 'yellow'
 })
