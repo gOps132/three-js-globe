@@ -10,7 +10,7 @@ import atmosphere_fragment_shader from "Assets/shaders/fragment_atmosphere.glsl"
 import { drawThreeGeo } from "App/threeGeoJSON.js";
 
 import countries_states from "Assets/json/countries_states.json";
-import one_ma from "Assets/json/example/0.00Ma_polygon.json";
+import one_ma from "Assets/json/example/450.00Ma_polygon.json";
 
 const gui = new dat.GUI();
 
