@@ -17,6 +17,7 @@ import { drawThreeGeo } from "App/threeGeoJSON.js";
 import samp_geojson from "Assets/json/samp.json";
 import border_geojson from "Assets/json/border.json";
 import countries_states from "Assets/json/countries_states.json";
+import samp2 from "Assets/json/reconstructed_0.00Ma.json";
 
 const gui = new dat.GUI();
 
@@ -30,39 +31,9 @@ const canvas = document.querySelector('canvas.webgl');
  */
 const scene = new THREE.Scene();
 
-// drawThreeGeo(samp_geojson, 20, 'sphere', scene, {
-//     color: 'green',
-// 	borderColor: 'green'
-// })
-
-// drawThreeGeo(border_geojson, 20, 'sphere', scene, {
-// 	color: 'yellow',
-// 	borderColor: 'yellow'
-// })
-
-drawThreeGeo(countries_states, 20, 'sphere', scene, {
-	color: 'green',
-	borderColor: 'yellow'
-})
-
-
 /**
  * Stars
  */
-// // const material = new THREE.MeshNormalMaterial();
-// // material.wireframe = true;
-// const octahedron_star_01 = new THREE.Points(
-// 	new THREE.OctahedronGeometry(300, 1), 
-// 	new THREE.PointsMaterial({color: 0xFFFFFF})
-// );
-
-// // const material_2 = new THREE.MeshNormalMaterial();
-// // material_2.wireframe = true;
-// const octahedron_star_02 = new THREE.Points(
-// 	new THREE.OctahedronGeometry(600, 3),
-// 	new THREE.PointsMaterial({color: 0xFFFFFF})
-// );
-
 const star_geometry = new THREE.BufferGeometry();
 const star_material = new THREE.PointsMaterial({
 	color: 0xFFFFFF,
@@ -70,9 +41,12 @@ const star_material = new THREE.PointsMaterial({
 
 const star_vertices = [];
 for(let i=0; i < 10000; i++) {
+	var _z = 1;
+	if (i > 5000)
+		_z = -1;
 	const x = (Math.random() - 0.5) * 2000;
 	const y = (Math.random() - 0.5) * 2000;
-	const z = -(Math.random()) * 3000;
+	const z = _z * (Math.random()) * 3000;
 	star_vertices.push(x,y,z);
 }
 
@@ -126,11 +100,25 @@ const atmosphere = new THREE.Mesh(
 
 atmosphere.scale.set(1.1, 1.1, 1.1);
 
+var mesh_array = [];
+var border_array = [];
+drawThreeGeo(countries_states, 20, 'sphere', scene, mesh_array, border_array, {
+	color: 'green',
+	borderColor: 'yellow'
+})
+
+for(var i = 0; i < mesh_array.length; i++) {
+	empty_earth.add(mesh_array[i]);
+}
+
+for(var i = 0; i < border_array.length; i++) {
+	empty_earth.add(border_array[i]);
+}
+
+
 /**
  * Add scenes
  */
-// scene.add(octahedron_star_01);
-// scene.add(octahedron_star_02);
 scene.add(stars);
 scene.add(empty_earth);
 // scene.add(earth);
@@ -181,6 +169,12 @@ earth_folder.add(earth.rotation, 'x', 0, Math.PI).name('Rotate X Axis');
 earth_folder.add(earth.rotation, 'y', 0, Math.PI).name('Rotate Y Axis');
 earth_folder.add(earth.rotation, 'z', 0, Math.PI).name('Rotate Z Axis');
 
+const empty_earth_folder = gui.addFolder('Empty Earth');
+empty_earth_folder.add(empty_earth.material, 'wireframe');
+empty_earth_folder.add(empty_earth.rotation, 'x', 0, Math.PI).name('Rotate X Axis');
+empty_earth_folder.add(empty_earth.rotation, 'y', 0, Math.PI).name('Rotate Y Axis');
+empty_earth_folder.add(empty_earth.rotation, 'z', 0, Math.PI).name('Rotate Z Axis');
+
 var control_params = {
 	auto_rotate: true,
 	enable_damping: true,
@@ -216,6 +210,40 @@ camera_folder.add(control_params, 'enable_zoom').name("Enable Zoom")
 camera_folder.add(control_params, 'enable_pan').name("Enable Pan")
 	.onChange((value) => controls.enablePan=value);
 
+const continents = gui.addFolder('Continents');
+var misc_mesh_params = {show: true};
+var misc_border_params = {show: true};
+
+continents.add(misc_mesh_params, 'show').name("show fill")
+	.onChange((value) => {
+		if(value) {
+			for(var i = 0; i < mesh_array.length; i++) {
+				scene.add(mesh_array[i]);
+			}
+		} else {
+			for(var i = 0; i < mesh_array.length; i++) {
+				mesh_array[i].geometry.dispose();
+				mesh_array[i].material.dispose();
+				scene.remove(mesh_array[i]);
+			}
+		}
+	})
+
+continents.add(misc_border_params, 'show').name("show border")
+.onChange((value) => {
+	if(value) {
+		for(var i = 0; i < border_array.length; i++) {
+			scene.add(border_array[i]);
+		}
+	} else {
+		for(var i = 0; i < border_array.length; i++) {
+			border_array[i].geometry.dispose();
+			border_array[i].material.dispose();
+			scene.remove(border_array[i]);
+		}
+	}
+})
+
 /**
  * Renderer
  */
@@ -233,7 +261,6 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 const clock = new THREE.Clock();
 const tick = () => {
 	const elapsedTime = clock.getElapsedTime()
-
 	// Update controls
 	controls.update()
 	// Render

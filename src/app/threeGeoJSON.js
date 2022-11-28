@@ -10,12 +10,14 @@ var y_values = [];
 var z_values = [];
 
 var _scene;
+var _mesh_array;
+var _border_array;
 
-export function drawThreeGeo(json, radius, shape, scene, options) {
+export function drawThreeGeo(json, radius, shape, scene, mesh_array, border_array, options) {
 	_scene = scene;
-
-	console.log("im using this function");
-
+	_mesh_array = mesh_array;
+	_border_array = border_array;
+	
 	var json_geom = createGeometryArray(json);
 	//An array to hold the feature geometries.
 	var convertCoordinates = getConversionFunctionName(shape);
@@ -83,6 +85,9 @@ export function drawThreeGeo(json, radius, shape, scene, options) {
 			throw new Error('The geoJSON is not valid.');
 		}
 	}
+
+	mesh_array = _mesh_array;
+	border_array = border_array;
 }
 
 function createGeometryArray(json) {
@@ -243,6 +248,7 @@ function drawLine(x_values, y_values, z_values, options) {
 
 	var line = new THREE.Line(line_geom, line_material);
 
+	_border_array.push(line);
 	obj.add(line);
 
 	// mesh
@@ -250,10 +256,12 @@ function drawLine(x_values, y_values, z_values, options) {
 	createVertexForEachPoint(mesh_geom, x_values, y_values, z_values);
 	var mesh_material = new THREE.MeshBasicMaterial({
 		color: options.color,
-		side: THREE.DoubleSide
+		side: THREE.DoubleSide,
+		blending: THREE.NormalBlending,
 	});
 	var mesh = new THREE.Mesh(mesh_geom, mesh_material);
 
+	_mesh_array.push(mesh);
 	obj.add(mesh);
 
 	_scene.add(obj);
