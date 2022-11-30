@@ -9,7 +9,9 @@ import atmosphere_fragment_shader from "Assets/shaders/fragment_atmosphere.glsl"
 
 import { drawThreeGeo } from "App/threeGeoJSON.js";
 
-import ridges_ma_0_00 from "Assets/json/example/ridges_before.json";
+import model_ridges_ma_0_00 from "Assets/json/example/ridges_0.00Ma.json";
+import model_coastlines_ma_0_00 from "Assets/json/example/coastlines_0.00Ma.json";
+
 import { geoModel } from "App/geoModel.js"
 
 const gui = new dat.GUI();
@@ -76,14 +78,21 @@ const atmosphere = new THREE.Mesh(
 
 atmosphere.scale.set(1.1, 1.1, 1.1);
 
-const border_ma_0_00 = new geoModel(ridges_ma_0_00, scene, 'ridges');
+const border_ma_0_00 = new geoModel(model_ridges_ma_0_00, scene, 'ridges');
+const coastlines_ma_00 = new geoModel(model_coastlines_ma_0_00, scene, 'coastlines');
 
 border_ma_0_00.draw(20, 'sphere', {
+	color: 'green',
+	borderColor: 'red'
+})
+
+coastlines_ma_00.draw(20, 'sphere', {
 	color: 'green',
 	borderColor: 'yellow'
 })
 
 border_ma_0_00.added_to(earth);
+coastlines_ma_00.added_to(earth);
 
 /**
  * Add scenes
@@ -174,6 +183,7 @@ camera_folder.add(control_params, 'enable_pan').name("Enable Pan")
 
 const continents = gui.addFolder('Continents');
 border_ma_0_00.gui_add(continents);
+coastlines_ma_00.gui_add(continents);
 
 /**
  * Renderer
