@@ -9,8 +9,8 @@ import atmosphere_fragment_shader from "Assets/shaders/fragment_atmosphere.glsl"
 
 import { drawThreeGeo } from "App/threeGeoJSON.js";
 
-import countries_states from "Assets/json/countries_states.json";
-import one_ma from "Assets/json/example/450.00Ma_polygon.json";
+import ridges_ma_0_00 from "Assets/json/example/ridges_before.json";
+import { geoModel } from "App/geoModel.js"
 
 const gui = new dat.GUI();
 
@@ -76,21 +76,14 @@ const atmosphere = new THREE.Mesh(
 
 atmosphere.scale.set(1.1, 1.1, 1.1);
 
-var mesh_array = [];
-var border_array = [];
-drawThreeGeo(one_ma, 20, 'sphere', scene, mesh_array, border_array, {
+const border_ma_0_00 = new geoModel(ridges_ma_0_00, scene, 'ridges');
+
+border_ma_0_00.draw(20, 'sphere', {
 	color: 'green',
 	borderColor: 'yellow'
 })
 
-for(var i = 0; i < mesh_array.length; i++) {
-	earth.add(mesh_array[i]);
-}
-
-for(var i = 0; i < border_array.length; i++) {
-	earth.add(border_array[i]);
-}
-
+border_ma_0_00.added_to(earth);
 
 /**
  * Add scenes
@@ -180,42 +173,7 @@ camera_folder.add(control_params, 'enable_pan').name("Enable Pan")
 	.onChange((value) => controls.enablePan=value);
 
 const continents = gui.addFolder('Continents');
-var misc_mesh_params = {show: true};
-var misc_border_params = {show: true};
-
-continents.add(misc_mesh_params, 'show').name("show fill")
-	.onChange((value) => {
-		if(value) {
-			for(var i = 0; i < mesh_array.length; i++) {
-				scene.add(mesh_array[i]);
-				earth.add(mesh_array[i]);
-			}
-		} else {
-			for(var i = 0; i < mesh_array.length; i++) {
-				mesh_array[i].geometry.dispose();
-				mesh_array[i].material.dispose();
-				scene.remove(mesh_array[i]);
-				earth.remove(mesh_array[i]);
-			}
-		}
-	})
-
-continents.add(misc_border_params, 'show').name("show border")
-.onChange((value) => {
-	if(value) {
-		for(var i = 0; i < border_array.length; i++) {
-			scene.add(border_array[i]);
-			earth.add(border_array[i]);
-		}
-	} else {
-		for(var i = 0; i < border_array.length; i++) {
-			border_array[i].geometry.dispose();
-			border_array[i].material.dispose();
-			scene.remove(border_array[i]);
-			earth.remove(border_array[i]);
-		}
-	}
-})
+border_ma_0_00.gui_add(continents);
 
 /**
  * Renderer
@@ -234,6 +192,7 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 const clock = new THREE.Clock();
 const tick = () => {
 	const elapsedTime = clock.getElapsedTime()
+
 	// Update controls
 	controls.update()
 	// Render
