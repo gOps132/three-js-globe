@@ -7,8 +7,6 @@ import * as dat from 'dat.gui';
 import atmosphere_vertex_shader from "Assets/shaders/vertex_atmosphere.glsl";
 import atmosphere_fragment_shader from "Assets/shaders/fragment_atmosphere.glsl";
 
-import { drawThreeGeo } from "App/threeGeoJSON.js";
-
 import model_ridges_ma_0_00 from "Assets/json/example/ridges_0.00Ma.json";
 import model_coastlines_ma_0_00 from "Assets/json/example/coastlines_0.00Ma.json";
 
