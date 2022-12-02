@@ -9,6 +9,7 @@ import atmosphere_fragment_shader from "Assets/shaders/fragment_atmosphere.glsl"
 
 import model_ridges_ma_0_00 from "Assets/json/example/ridges_0.00Ma.json";
 import model_coastlines_ma_0_00 from "Assets/json/example/coastlines_0.00Ma.json";
+import plate_boundaries_ma_0_00 from "Assets/json/example/topology_boundaries_0.00Ma.json";
 
 // import model_ridges_ma_0_00 from "Assets/json/example/ridges_after_0.00Ma.json";
 // import model_coastlines_ma_0_00 from "Assets/json/example/coastlines_after0.00Ma.json";
@@ -90,21 +91,29 @@ const atmosphere = new THREE.Mesh(
 
 atmosphere.scale.set(1.1, 1.1, 1.1);
 
-const border_ma_0_00 = new geoModel(model_ridges_ma_0_00, scene, 'ridges');
-const coastlines_ma_00 = new geoModel(model_coastlines_ma_0_00, scene, 'coastlines');
+const ridges = new geoModel(model_ridges_ma_0_00, scene, 'ridges');
+const coastlines = new geoModel(model_coastlines_ma_0_00, scene, 'coastlines');
+const plate_boundaries = new geoModel(plate_boundaries_ma_0_00, scene, 'plate_boundaries');
 
-border_ma_0_00.draw(20, 'sphere', {
+ridges.draw(20, 'sphere', {
 	color: 'green',
 	borderColor: 'red'
 })
 
-coastlines_ma_00.draw(20, 'sphere', {
+coastlines.draw(20, 'sphere', {
 	color: 'green',
 	borderColor: 'yellow'
 })
 
-border_ma_0_00.added_to(earth);
-coastlines_ma_00.added_to(earth);
+plate_boundaries.draw(20, 'sphere', {
+	color: 'black',
+	borderColor: 'black'
+})
+
+
+ridges.added_to(earth);
+coastlines.added_to(earth);
+plate_boundaries.added_to(earth);
 
 /**
  * Add scenes
@@ -200,8 +209,9 @@ camera_folder.add(control_params, 'enable_pan').name("Enable Pan")
 	.onChange((value) => controls.enablePan=value);
 
 const continents = gui.addFolder('Continents');
-border_ma_0_00.gui_add(continents);
-coastlines_ma_00.gui_add(continents);
+ridges.gui_add(continents);
+coastlines.gui_add(continents);
+plate_boundaries.gui_add(continents);
 
 /**
  * Renderer
