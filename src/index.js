@@ -10,7 +10,12 @@ import atmosphere_fragment_shader from "Assets/shaders/fragment_atmosphere.glsl"
 import model_ridges_ma_0_00 from "Assets/json/example/ridges_0.00Ma.json";
 import model_coastlines_ma_0_00 from "Assets/json/example/coastlines_0.00Ma.json";
 
+// import model_ridges_ma_0_00 from "Assets/json/example/ridges_after_0.00Ma.json";
+// import model_coastlines_ma_0_00 from "Assets/json/example/coastlines_after0.00Ma.json";
+
 import { geoModel } from "App/geoModel.js"
+
+// TODO: Add color manipulation for atmosphere and earth.
 
 const gui = new dat.GUI();
 
@@ -39,7 +44,7 @@ for(let i=0; i < 10000; i++) {
 		_z = -1;
 	const x = (Math.random() - 0.5) * 2000;
 	const y = (Math.random() - 0.5) * 2000;
-	const z = _z * (Math.random()) * 3000;
+	const z = _z * (Math.random()) * 10000;
 	star_vertices.push(x,y,z);
 }
 
@@ -62,6 +67,12 @@ const earth = new THREE.Mesh(
 	})
 );
 
+var atmosphere_params = {
+	color: 0x3d7fe3,
+}
+
+console.log(typeof(atmosphere_params.color));
+
 const atmosphere = new THREE.Mesh(
 	new THREE.SphereGeometry(20, 50, 50), 
 	new THREE.ShaderMaterial({
@@ -70,6 +81,9 @@ const atmosphere = new THREE.Mesh(
 		blending: THREE.AdditiveBlending,
 		side: THREE.BackSide,
 		uniforms: {
+			u_color: {
+				value: atmosphere_params.color
+			}
 		}
 	})
 );
@@ -143,6 +157,12 @@ earth_folder.add(earth.material, 'wireframe');
 earth_folder.add(earth.rotation, 'x', 0, Math.PI).name('Rotate X Axis');
 earth_folder.add(earth.rotation, 'y', 0, Math.PI).name('Rotate Y Axis');
 earth_folder.add(earth.rotation, 'z', 0, Math.PI).name('Rotate Z Axis');
+
+const atmosphere_folder = gui.addFolder('Atmosphere');
+atmosphere_folder.addColor(atmosphere_params, 'color')
+	.onChange((color_value) => {
+		atmosphere.material.uniforms.u_color.value = color_value;
+	});
 
 var control_params = {
 	auto_rotate: true,
