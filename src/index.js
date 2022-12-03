@@ -11,6 +11,8 @@ import model_ridges_ma_0_00 from "Assets/json/example/ridges_0.00Ma.json";
 import model_coastlines_ma_0_00 from "Assets/json/example/coastlines_0.00Ma.json";
 import plate_boundaries_ma_0_00 from "Assets/json/example/topology_boundaries_0.00Ma.json";
 
+import model_coastlines_ma_plus_50_00 from "Assets/json/example/plus_50_ma/reconstructed_plus_50.00Ma_polygon.json";
+
 // import model_ridges_ma_0_00 from "Assets/json/example/ridges_after_0.00Ma.json";
 // import model_coastlines_ma_0_00 from "Assets/json/example/coastlines_after0.00Ma.json";
 
@@ -93,6 +95,7 @@ atmosphere.scale.set(1.1, 1.1, 1.1);
 
 const ridges = new geoModel(model_ridges_ma_0_00, scene, 'ridges');
 const coastlines = new geoModel(model_coastlines_ma_0_00, scene, 'coastlines');
+const coastlines_plus_50_ma = new geoModel(model_coastlines_ma_plus_50_00, scene, 'coastlines_plus_50_ma');
 const plate_boundaries = new geoModel(plate_boundaries_ma_0_00, scene, 'plate_boundaries');
 
 ridges.draw(20, 'sphere', {
@@ -105,14 +108,20 @@ coastlines.draw(20, 'sphere', {
 	borderColor: 'yellow'
 })
 
+coastlines_plus_50_ma.draw(20, 'sphere', {
+	color: 'green',
+	borderColor: 'orange'
+})
+
+
 plate_boundaries.draw(20, 'sphere', {
 	color: 'black',
 	borderColor: 'black'
 })
 
-
 ridges.added_to(earth);
 coastlines.added_to(earth);
+coastlines_plus_50_ma.added_to(earth);
 plate_boundaries.added_to(earth);
 
 /**
@@ -211,6 +220,7 @@ camera_folder.add(control_params, 'enable_pan').name("Enable Pan")
 const continents = gui.addFolder('Continents');
 ridges.gui_add(continents);
 coastlines.gui_add(continents);
+coastlines_plus_50_ma.gui_add(continents);
 plate_boundaries.gui_add(continents);
 
 /**
